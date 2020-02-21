@@ -1,4 +1,4 @@
-# 向日葵控控A2刷机教程
+# 向日葵控控A2(OrayKVM)U盘救砖/USB恢复模式说明/免U盘刷机教程
 
 控控A2是向日葵推出的IP KVM硬件盒子，通过模拟USB键鼠输入，并采集显卡HDMI输出，使受控电脑不需要安装远控软件就能被远程控制，甚至还能远程控制电脑进BIOS调设置，甚至远程重装系统，还是非常好用的。
 https://sunlogin.oray.com/personal/kongkong2/
