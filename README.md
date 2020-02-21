@@ -26,6 +26,8 @@ https://sunlogin.oray.com/personal/kongkong2/
 
 [USB刷入.rar（12.13 MB）](http://qiniu.img.hu60.cn/file-hash-rar-9623f23110f9165d1c7f15036672552e12724384.rar)
 
+如链接的文件失效，请直接下载项目版本库中的同名文件。
+
 # 控控A2 USB恢复模式说明
 
 ## 一、适用说明：
