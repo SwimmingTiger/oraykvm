@@ -159,7 +159,7 @@ chmod +x /dev/flash_erase /dev/flashcp
 [kvm_upgrade_1.3.10_firmware.bz2（12.73 MB）](http://qiniu.img.hu60.cn/file-hash-bz2-24c6fafc3e9fef2a0bd3028de948f81513348043.bz2)
 
 # 开启RTMP直播（比如斗鱼推流）的方法
-1. 访问 http://控控的IP:30080，比如我这里是 http://192.168.1.22:30080
+1. 访问 http://控控的IP:30080 ，比如我这里是 http://192.168.1.22:30080
 2. “请输入访问密码”，输入。
 3. “是否开启RTMP直播”，选“是”。
 4. RTMP地址，先输入推流地址，然后输入空格，再输入推流码。比如我这里是“rtmp://send3.douyu.com/live 58861..........?wsSecret=9.............&wsTime=5e7e5392&wsSeek=off&wm=0&tw=0&roirecognition=0”。
