@@ -168,3 +168,14 @@ chmod +x /dev/flash_erase /dev/flashcp
 7. 而且，推流的帧率只有20帧，挺卡的。
 8. 没有声音。
 
+# 在控控中通过chroot运行Debian/Raspbian（树莓派）系统
+
+https://github.com/SwimmingTiger/oraykvm/releases/download/0.0.1/oraykvm-pi.tar.gz
+
+使用方法：
+1. U盘格式化为ext2文件系统。控控不支持ext3/4。
+2. 把`oraykvm-pi.tar.gz`解压到U盘根目录。
+3. U盘插入控控。
+4. 登陆控控SSH，如`ssh admin@控控IP -p44022`
+5. 挂载U盘，如`mount /dev/sda1 /mnt`
+6. 进入chroot系统：`/mnt/oraykvm-pi/chroot.sh`
