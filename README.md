@@ -177,7 +177,7 @@ https://github.com/SwimmingTiger/oraykvm/releases/download/0.0.1/oraykvm-pi.tar.
 2. 把`oraykvm-pi.tar.gz`解压到U盘根目录。注意，为了保留文件权限和符号连接，必须在Linux里解压。
    如果要在控控内解压，请先在电脑里解开gzip压缩（Windows可以用7z，Linux用`gzip -d oraykvm-pi.tar.gz`）。
    在控控内解压gzip会非常非常非常非常非常非常非常非常慢，而仅解压tar则可以很快完成。
-   tar解压命令参考：`busybox tar xf oraykvm-pi.tar`。
+   tar解压命令参考：`busybox tar xf oraykvm-pi.tar`。在电脑上解压不需要`busybox`前缀。
 3. U盘插入控控。
 4. 登陆控控SSH，如`ssh admin@控控IP -p44022`
 5. 挂载U盘，如`busybox mount /dev/sda1 /mnt`
