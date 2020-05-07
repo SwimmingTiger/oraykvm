@@ -172,6 +172,9 @@ chmod +x /dev/flash_erase /dev/flashcp
 
 https://github.com/SwimmingTiger/oraykvm/releases/download/0.0.1/oraykvm-pi.tar.gz
 
+链接：https://pan.baidu.com/s/13Bq4hVJTCeU-NCvT8zoTmw 
+提取码：a875
+
 使用方法：
 1. U盘格式化为ext2文件系统。控控不支持ext3/4。
 2. 把`oraykvm-pi.tar.gz`解压到U盘根目录。注意，为了保留文件权限和符号连接，必须在Linux里解压。
