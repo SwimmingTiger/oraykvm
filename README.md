@@ -189,12 +189,12 @@ https://github.com/SwimmingTiger/oraykvm/releases/download/0.0.1/oraykvm-pi.tar.
 
 # 控控固件修改/制作自定义固件
 
-1. 启动Linux（或者WSL2），安装`squashfs-tools`软件包。
+1. 启动Linux（或者WSL2），安装`squashfs-tools`软件包。<br>
    `sudo apt install squashfs-tools`
-2. 解压固件。
+2. 解压固件。<br>
    `sudo unsquashfs rootfs.bin`
 3. 修改固件，请自便。根文件系统在解压出来的`squashfs-root`文件夹里。
-3. 打包固件。
+3. 打包固件。<br>
    `sudo mksquashfs squashfs-root new.bin -comp xz -b 131072`
 4. 按前面提到的方法用U盘或者`flashcp`命令刷入`new.bin`
 
