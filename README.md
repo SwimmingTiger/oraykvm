@@ -185,3 +185,25 @@ https://github.com/SwimmingTiger/oraykvm/releases/download/0.0.1/oraykvm-pi.tar.
 4. 登陆控控SSH，如`ssh admin@控控IP -p44022`
 5. 挂载U盘，如`busybox mount /dev/sda1 /mnt`
 6. 进入chroot系统：`/mnt/oraykvm-pi/chroot.sh`
+
+
+# 控控固件修改/制作自定义固件
+
+1. 启动Linux（或者WSL2），安装`squashfs-tools`软件包。
+   `sudo apt install squashfs-tools`
+2. 解压固件。
+   `sudo unsquashfs rootfs.bin`
+3. 修改固件，请自便。根文件系统在解压出来的`squashfs-root`文件夹里。
+3. 打包固件。
+   `sudo mksquashfs squashfs-root new.bin -comp xz -b 131072`
+4. 按前面提到的方法用U盘或者`flashcp`命令刷入`new.bin`
+
+### 注意事项
+
+不要在WSL的/mnt卷（Windows文件系统）内解压，否则文件权限可能不正确，特殊类型文件（比如设备文件）也会没有。
+
+应该在WSL2或者原生Linux目录中解压。不推荐使用WSL1。不能解压到挂载的NTFS文件系统（比如/media或者/mnt下的目录）。
+
+还有，需要使用root用户解压和打包（所以我给的命令前面都加了`sudo`）。
+
+此外，刷入时不能使用dd命令。推荐使用U盘刷入。如果要免U盘，应该使用flashcp（看教程）。
