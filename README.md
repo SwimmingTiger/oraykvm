@@ -200,10 +200,10 @@ https://github.com/SwimmingTiger/oraykvm/releases/download/0.0.1/oraykvm-pi.tar.
 
 ### 注意事项
 
-不要在WSL的/mnt卷（Windows文件系统）内解压，否则文件权限可能不正确，特殊类型文件（比如设备文件）也会没有。
+不要在WSL的`/mnt`卷（Windows文件系统）内解压，否则文件权限可能不正确，特殊类型文件（比如设备文件）也会没有。
 
-应该在WSL2或者原生Linux目录中解压。不推荐使用WSL1。不能解压到挂载的NTFS文件系统（比如/media或者/mnt下的目录）。
+应该在WSL2或者原生Linux目录中解压。不推荐使用WSL1。不能解压到挂载的NTFS文件系统（比如`/media`或者`/mnt`下的目录）。
 
-还有，需要使用root用户解压和打包（所以我给的命令前面都加了`sudo`）。
+还有，需要使用`root`用户解压和打包（所以我给的命令前面都加了`sudo`）。
 
-此外，刷入时不能使用dd命令。推荐使用U盘刷入。如果要免U盘，应该使用flashcp（看教程）。
+此外，刷入时不能使用`dd`命令。推荐使用U盘刷入。如果要免U盘，应该使用`flashcp`（看教程）。
