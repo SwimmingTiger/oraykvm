@@ -102,11 +102,11 @@ ssh -p44022 admin@192.168.1.22
 # dd命令虽然不能正确刷入固件，但是却可以正确备份固件
 # 备份出来的固件可以通过下面提到的方法刷入
 
-dd if=/dev/mtdblock0 /dev/mtd0.img
-dd if=/dev/mtdblock1 /dev/mtd1.img
-dd if=/dev/mtdblock2 /dev/mtd2.img
-dd if=/dev/mtdblock3 /dev/mtd3.img
-dd if=/dev/mtdblock4 /dev/mtd4.img
+dd if=/dev/mtdblock0 of=/dev/mtd0.img
+dd if=/dev/mtdblock1 of=/dev/mtd1.img
+dd if=/dev/mtdblock2 of=/dev/mtd2.img
+dd if=/dev/mtdblock3 of=/dev/mtd3.img
+dd if=/dev/mtdblock4 of=/dev/mtd4.img
 ```
 
 然后用`scp`或者`WinSCP`把这些`img`文件拷贝出来即可。
