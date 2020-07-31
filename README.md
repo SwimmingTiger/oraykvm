@@ -206,4 +206,4 @@ https://github.com/SwimmingTiger/oraykvm/releases/download/0.0.1/oraykvm-pi.tar.
 
 还有，需要使用`root`用户解压和打包（所以我给的命令前面都加了`sudo`）。
 
-此外，刷入时不能使用`dd`命令。推荐使用U盘刷入。如果要免U盘，应该使用`flashcp`（看教程）。
+此外，刷入时不能使用`dd`命令。推荐使用U盘刷入。如果要免U盘，应该使用`flashcp`（看上面的免U盘刷机教程）。
