@@ -3,6 +3,21 @@
 # /dev/ttyAMA1 是控控的USB模拟单片机，串口设备
 # 在远程控制时对 sunlogin_client 进行 strace 就可以看到它向 /dev/ttyAMA1 设备发送的指令了
 
+# 分析 sunlogin_client 键鼠控制命令的方法：
+# 自己想办法安装strace，然后运行（把9501换成sunlogin_client的pid）
+# strace -ff -s 4096 -t -x -o log -p 9501
+# 命令会在当前文件夹生成大量log.pid文件
+# 不要结束这个命令，然后连接到控控的远程控制
+# 接着在电脑上打开另一个SSH窗口，运行（把log.9876换成倒数第二个文件名）
+# tail -F log.9876 | grep --line-buffered write
+# 然后试试在控控的远程控制内按键，如果按键后tail命令输出了新行（按下一行放开一行），说明找对了文件。
+# 如果没有输出内容，或者输出了大量奇怪内容，说明找错了文件，换个文件tail
+
+# 备注：
+# 1. 当前版本的sunlogin_client使用倒数第二个线程发送键盘鼠标控制命令给单片机
+# 2. 编码里面有一个部分是自增序列号，但你发送的时候不必自增，随便选个数字就可以
+# 3. 不清楚命令使用的编码方式
+
 
 echo "这只是例子，不能直接运行"
 exit
@@ -117,12 +132,23 @@ KEY_DEL_UP="\xaa\x0d\x00\x16\x04\x0a\x01\x03\x00\x4c\x00\x00\x00\x00\x00\xbb"
 KEY_DEL_DN="\xaa\x0d\x00\x17\x04\xbe\x00\x03\x00\x00\x00\x00\x00\x00\x00\xbb"
 
 
+# 按单个按键
+
+# 按H
+echo -n -e "$KEY_H_UP" > /dev/ttyAMA1
+sleep 0.5
+echo -n -e "$KEY_H_DN" > /dev/ttyAMA1
+
+# 按C
+echo -n -e "$KEY_C_UP" > /dev/ttyAMA1
+sleep 0.5
+echo -n -e "$KEY_C_DN" > /dev/ttyAMA1
+
+
 # 部分组合键
 # 还没有搞清楚按键的编码方法
 
 # ctrl + alt + del
-while true; do
-echo -n .
 echo -n -e "\xaa\x0d\x00\xea\x06\xc2\x00\x03\x04\x00\x00\x00\x00\x00\x00\xbb" > /dev/ttyAMA1
 sleep 0.5
 echo -n -e "\xaa\x0d\x00\xeb\x06\xc3\x00\x03\x05\x00\x00\x00\x00\x00\x00\xbb" > /dev/ttyAMA1
@@ -134,11 +160,8 @@ sleep 0.5
 echo -n -e "\xaa\x0d\x00\xee\x06\xbf\x00\x03\x01\x00\x00\x00\x00\x00\x00\xbb" > /dev/ttyAMA1
 sleep 0.5
 echo -n -e "\xaa\x0d\x00\xef\x06\xbe\x00\x03\x00\x00\x00\x00\x00\x00\x00\xbb" > /dev/ttyAMA1
-done
 
 # alt + sysrq + b
-while true; do
-echo -n .
 echo -n -e "\xaa\x0d\x00\xb5\x06\xc2\x00\x03\x04\x00\x00\x00\x00\x00\x00\xbb" > /dev/ttyAMA1
 sleep 0.2
 echo -n -e "\xaa\x0d\x00\xb6\x06\xc2\x00\x03\x04\x00\x00\x00\x00\x00\x00\xbb" > /dev/ttyAMA1
@@ -150,17 +173,11 @@ sleep 0.2
 echo -n -e "\xaa\x0d\x00\xb9\x06\xbe\x00\x03\x00\x00\x00\x00\x00\x00\x00\xbb" > /dev/ttyAMA1
 sleep 0.2
 echo -n -e "\xaa\x0d\x00\xba\x06\xbe\x00\x03\x00\x00\x00\x00\x00\x00\x00\xbb" > /dev/ttyAMA1
-sleep 0.5
-done
 
 # del
-while true; do
-echo -n .
 echo -n -e "\xaa\x0d\x00\xa3\x08\x0a\x01\x03\x00\x4c\x00\x00\x00\x00\x00\xbb" > /dev/ttyAMA1
 sleep 0.1
 echo -n -e "\xaa\x0d\x00\xa4\x08\xbe\x00\x03\x00\x00\x00\x00\x00\x00\x00\xbb" > /dev/ttyAMA1
-sleep 0.5
-done
 
 
 # 远程自动运行按键模拟脚本的方法
