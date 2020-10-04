@@ -208,6 +208,6 @@ https://github.com/SwimmingTiger/oraykvm/releases/download/0.0.1/oraykvm-pi.tar.
 
 此外，刷入时不能使用`dd`命令。推荐使用U盘刷入。如果要免U盘，应该使用`flashcp`（看上面的免U盘刷机教程）。
 
-### 模拟按键
+# 模拟按键
 
 用Shell命令就能控制控控A2的USB单片机进行按键模拟，参考这个脚本：[press.sh](press.sh)
