@@ -142,7 +142,7 @@ ssh -p44022 admin@192.168.1.22
 # 密码是oray.com
 
 接下来就是在控控的shell里面执行的命令了：
-chmod +x /dev/flash_erase /dev/flashcp
+busybox chmod +x /dev/flash_erase /dev/flashcp
 
 # 请像我这样一行输完命令，以免中途SSH断开发生意外。
 # 这里我只刷了根文件系统，没有刷内核。如果你修改了内核，用同样的方式刷入`/dev/mtd1`即可。
