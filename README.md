@@ -24,7 +24,7 @@ https://sunlogin.oray.com/personal/kongkong2/
 
 对uboot（/dev/mtdblock0）进行一番逆向之后，并没有什么收获，于是只好问客服。然后客服就发给我这个：
 
-[USB刷入.rar（12.13 MB）](http://qiniu.img.hu60.cn/file-hash-rar-9623f23110f9165d1c7f15036672552e12724384.rar)
+[USB刷入.rar（12.13 MB）](USB刷入.rar)
 
 如链接的文件失效，请直接下载项目版本库中的同名文件。
 
@@ -151,11 +151,13 @@ busybox chmod +x /dev/flashcp
 # 如果你看到了done，说明刷好了，控控已经在重启了。如果重启后卡在黄灯，恭喜，U盘救砖吧。祝你迅速进入白灯，然后系统顺利启动。
 ```
 
-顺便提供两个原厂固件，里面的`rootfs.squashfs`重命名为`rootfs.bin`，`uImage`重命名为`kernel.bin`后可供U盘救砖。你也可以用我上面提到的方法免U盘刷入。再次警告，强烈不建议刷写【`/dev/mtd0`或`/dev/mtdblock0`】，也就是`u-boot.bin`。如果`uboot`刷坏了，救砖功能也就不能用了，只能返厂维修或者拆机用编程器重写uboot！
+顺便提供几个原厂固件，里面的`rootfs.squashfs`重命名为`rootfs.bin`，`uImage`重命名为`kernel.bin`后可供U盘救砖。你也可以用我上面提到的方法免U盘刷入。再次警告，强烈不建议刷写【`/dev/mtd0`或`/dev/mtdblock0`】，也就是`u-boot.bin`。如果`uboot`刷坏了，救砖功能也就不能用了，只能返厂维修或者拆机用编程器重写uboot！
 
-[kvm_upgrade_1.3.9_firmware.bz2（12.71 MB）](http://qiniu.img.hu60.cn/file-hash-bz2-35ceab1bc51eee0bec651623655e2bea13328328.bz2)
+[kvm_upgrade_1.3.9_firmware.bz2（12.71 MB）](kvm_upgrade_1.3.9_firmware.bz2)
 
-[kvm_upgrade_1.3.10_firmware.bz2（12.73 MB）](http://qiniu.img.hu60.cn/file-hash-bz2-24c6fafc3e9fef2a0bd3028de948f81513348043.bz2)
+[kvm_upgrade_1.3.10_firmware.bz2（12.73 MB）](kvm_upgrade_1.3.10_firmware.bz2)
+
+[kvm_upgrade_1.4.0_firmware.bz2（12.77 MB）](kvm_upgrade_1.4.0_firmware.bz2)
 
 # 开启RTMP直播（比如斗鱼推流）的方法
 1. 访问 `http://控控的IP:30080`，比如我这里是 `http://192.168.1.22:30080`
