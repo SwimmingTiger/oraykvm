@@ -1,0 +1,3 @@
+[submodule "custom-kernel/hi35xx-buildroot"]
+	path = custom-kernel/hi35xx-buildroot
+	url = https://github.com/hi35xx/hi35xx-buildroot.git

@@ -1,0 +1,1 @@
+hi35xx-buildroot/linux/linux-3.4.y
