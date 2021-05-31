@@ -211,7 +211,7 @@ https://github.com/SwimmingTiger/oraykvm/releases/download/0.0.1/oraykvm-pi.tar.
 
 [custom-kernel](custom-kernel) 文件夹有一个编译好的自定义内核`kernel.bin`，与控控原版`rootfs.bin`兼容，并且可以加载第三方内核模块（取消了内核模块版本检查）。此外，它自带了USB转串口驱动，可以用于连接USB继电器实现按电脑电源、重启按钮。
 
-[custom-kernel/linux-3.4.y.config](linux-3.4.y.config)是编译该内核使用的配置文件，内核源代码来自[hi35xx/hi35xx-buildroot](https://github.com/hi35xx/hi35xx-buildroot/tree/master/linux/linux-3.4.y)。
+[linux-3.4.y.config](custom-kernel/linux-3.4.y.config)是编译该内核使用的配置文件，内核源代码来自[hi35xx/hi35xx-buildroot](https://github.com/hi35xx/hi35xx-buildroot/tree/master/linux/linux-3.4.y)。
 
 # 模拟按键
 
