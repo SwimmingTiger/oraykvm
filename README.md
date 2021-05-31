@@ -72,7 +72,7 @@ U盘刷机虽然安全可靠，但来回插拔U盘以及按reset键，还是挺�
 		fi
 ```
 
-这就是刷入内核和rootfs所需要的操作。不过，我们通过SSH端口44022登录的会话虽然是root权限，但是却chroot了，没有`flash_erase`和`flashcp`命令。所以，需要从解压的固件里面找到这两个二进制（在`usr/sbin`里），scp上去（可以用WinSCP，选SCP模式，或者用`scp`命令）。
+这就是刷入内核和rootfs所需要的操作。不过，我们通过SSH端口44022登录的会话虽然是root权限，但是却chroot了，没有`flashcp`命令。所以，需要从解压的固件里面找到这个二进制（在`usr/sbin`里），scp上去（可以用WinSCP，选SCP模式，或者用`scp`命令）。备注：我们不需要`flash_erase`命令，因为`flashcp`命令本身就包含`erase`功能，你刷入时加`-v`参数就知道了。
 
 下面演示在Linux终端中如何连接控控刷固件。假设我的控控IP是`192.168.1.22`，我电脑shell当前所在目录结构如下：
 ```
@@ -87,7 +87,7 @@ U盘刷机虽然安全可靠，但来回插拔U盘以及按reset键，还是挺�
 
 控控的SSH监听在44022和44033端口。44022端口的用户名是`admin`，密码是`oray.com`，会话根目录被chroot了。44033的用户名是`root`，密码未知，会话根目录未被chroot。
 
-所以我们只能连接44022进行刷机，并且需要从外部复制`flash_erase`和`flashcp`命令。只有更改固件修改了root密码后，才能连上44033端口。
+所以我们只能连接44022进行刷机，并且需要从外部复制`flashcp`命令。只有更改固件修改了root密码后，才能连上44033端口。
 
 ## 备份原厂固件的方法
 
@@ -134,7 +134,7 @@ mtd4: 数据区，内含串号，可能还有wifi校准数据等
 # 把相关文件复制到`/dev`。这是chroot环境唯一的tmpfs内存盘。chroot环境不存在`/tmp`，需要自己挂载，不方便。
 # 因为要刷根文件系统，所以固件肯定不能复制到根文件系统。更何况也没法复制过去，控控没有挂overlayfs，根文件系统是只读的。
 # 控控有128M内存，平常占用很低，所以不用担心把内存塞满。但是不能塞太多，否则真的会满。
-scp -P44022 rootfs.bin squashfs-root/usr/sbin/flash_erase squashfs-root/usr/sbin/flashcp admin@192.168.1.22:/dev/
+scp -P44022 rootfs.bin squashfs-root/usr/sbin/flashcp admin@192.168.1.22:/dev/
 # 密码是oray.com
 
 # 登录SSH命令行shell
@@ -142,12 +142,11 @@ ssh -p44022 admin@192.168.1.22
 # 密码是oray.com
 
 接下来就是在控控的shell里面执行的命令了：
-busybox chmod +x /dev/flash_erase /dev/flashcp
+busybox chmod +x /dev/flashcp
 
-# 请像我这样一行输完命令，以免中途SSH断开发生意外。
 # 这里我只刷了根文件系统，没有刷内核。如果你修改了内核，用同样的方式刷入`/dev/mtd1`即可。
 # 【注意】，【不要动`/dev/mtd0`和`/dev/mtdblock0`】，否则砖了就只能返厂或者拆机上编程器了！！！
-/dev/flash_erase /dev/mtd2 0x0 0xa0; /dev/flashcp /dev/rootfs.bin /dev/mtd2; echo done; busybox reboot -f
+/dev/flashcp -v /dev/rootfs.bin /dev/mtd2; busybox reboot -f
 
 # 如果你看到了done，说明刷好了，控控已经在重启了。如果重启后卡在黄灯，恭喜，U盘救砖吧。祝你迅速进入白灯，然后系统顺利启动。
 ```
