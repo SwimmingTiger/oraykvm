@@ -148,7 +148,7 @@ busybox chmod +x /dev/flashcp
 # 【注意】，【不要动`/dev/mtd0`和`/dev/mtdblock0`】，否则砖了就只能返厂或者拆机上编程器了！！！
 /dev/flashcp -v /dev/rootfs.bin /dev/mtd2; busybox reboot -f
 
-# 如果你看到了done，说明刷好了，控控已经在重启了。如果重启后卡在黄灯，恭喜，U盘救砖吧。祝你迅速进入白灯，然后系统顺利启动。
+# 进度条走完就刷好了，如果卡住，说明控控已经在重启了。如果重启后卡在黄灯，恭喜，U盘救砖吧。祝你迅速进入白灯，然后系统顺利启动。
 ```
 
 顺便提供几个原厂固件，里面的`rootfs.squashfs`重命名为`rootfs.bin`，`uImage`重命名为`kernel.bin`后可供U盘救砖。你也可以用我上面提到的方法免U盘刷入。再次警告，强烈不建议刷写【`/dev/mtd0`或`/dev/mtdblock0`】，也就是`u-boot.bin`。如果`uboot`刷坏了，救砖功能也就不能用了，只能返厂维修或者拆机用编程器重写uboot！
