@@ -1,3 +1,5 @@
+在hu60.cn上查看/讨论：https://hu60.cn/q.php/bbs.topic.106810.html
+
 ### unchroot.c
 
 ```
