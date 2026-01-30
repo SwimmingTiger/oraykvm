@@ -168,7 +168,7 @@ func sendAllInOneSession(client *ssh.Client, keys []KeyAction, startSeq uint16) 
 		fmt.Fprintf(stdin, "printf '%s' > /dev/ttyAMA1\n", releaseStr)
 		time.Sleep(20 * time.Millisecond)
 
-		if i%10 == 0 {
+		if i > 0 && i%10 == 0 {
 			fmt.Printf("进度: %d/%d\n", i, len(keys))
 		}
 	}
