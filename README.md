@@ -10,6 +10,16 @@
 
 ---
 
+### ssh 出现 `no matching host key type found. Their offer: ssh-rsa,ssh-dss` 报错如何解决
+
+添加 `-o 'HostKeyAlgorithms=ssh-rsa'` 参数即可解决：
+
+```
+ssh -o 'HostKeyAlgorithms=ssh-rsa' -p 44022 admin@192.168.xx.xx
+```
+
+---
+
 控控A2是向日葵推出的IP KVM硬件盒子，通过模拟USB键鼠输入，并采集显卡HDMI输出，使受控电脑不需要安装远控软件就能被远程控制，甚至还能远程控制电脑进BIOS调设置，甚至远程重装系统，还是非常好用的。
 https://sunlogin.oray.com/personal/kongkong2/
 
