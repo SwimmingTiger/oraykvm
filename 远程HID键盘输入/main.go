@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"os"
 	"regexp"
+	"strconv"
 	"strings"
 	"time"
 
@@ -112,10 +113,14 @@ func buildHIDPacket(seqNum uint16, modifier, code byte) []byte {
 	packet[15] = 0xbb
 	return packet
 }
-func sendAllInOneSession(client *ssh.Client, keys []struct {
+
+type KeyAction struct {
 	hid   HIDKey
 	label string
-}, startSeq uint16) uint16 {
+	sleep time.Duration
+}
+
+func sendAllInOneSession(client *ssh.Client, keys []KeyAction, startSeq uint16) uint16 {
 	seq := startSeq
 	session, err := client.NewSession()
 	if err != nil {
@@ -138,10 +143,15 @@ func sendAllInOneSession(client *ssh.Client, keys []struct {
 		return seq
 	}
 
-	fmt.Printf("批量发送 %d 个按键（单 Session 模式）...\n", len(keys))
+	fmt.Printf("批量发送 %d 个动作（单 Session 模式）...\n", len(keys))
 
 	// 通过管道发送所有命令
 	for i, key := range keys {
+		if key.sleep > 0 {
+			fmt.Printf("延时 %v...\n", key.sleep)
+			time.Sleep(key.sleep)
+			continue
+		}
 		// 按下
 		pressData := buildHIDPacket(seq, key.hid.Modifier, key.hid.Code)
 		seq++
@@ -170,25 +180,28 @@ func sendAllInOneSession(client *ssh.Client, keys []struct {
 	return seq
 }
 
-func parseInput(input string) []struct {
-	hid   HIDKey
-	label string
-} {
-	var result []struct {
-		hid   HIDKey
-		label string
-	}
+func parseInput(input string) []KeyAction {
+	var result []KeyAction
 	specialKeyRegex := regexp.MustCompile(`<[^>]+>`)
 	pos := 0
 
 	for pos < len(input) {
 		if match := specialKeyRegex.FindStringIndex(input[pos:]); match != nil && match[0] == 0 {
 			keyName := input[pos : pos+match[1]]
+			upperKey := strings.ToUpper(strings.TrimSpace(keyName))
+			if strings.HasPrefix(upperKey, "<SLEEP") && strings.HasSuffix(upperKey, ">") {
+				payload := strings.TrimSpace(strings.TrimSuffix(strings.TrimPrefix(upperKey, "<SLEEP"), ">"))
+				seconds, err := strconv.Atoi(payload)
+				if err != nil || seconds < 0 {
+					fmt.Printf("⚠ 无效延时指令: %s\n", keyName)
+				} else {
+					result = append(result, KeyAction{sleep: time.Duration(seconds) * time.Second, label: keyName})
+				}
+				pos += match[1]
+				continue
+			}
 			if hid, ok := specialKeys[keyName]; ok {
-				result = append(result, struct {
-					hid   HIDKey
-					label string
-				}{hid, keyName})
+				result = append(result, KeyAction{hid: hid, label: keyName})
 				pos += match[1]
 				continue
 			}
@@ -196,10 +209,7 @@ func parseInput(input string) []struct {
 
 		r := rune(input[pos])
 		if hid, ok := charToHID[r]; ok {
-			result = append(result, struct {
-				hid   HIDKey
-				label string
-			}{hid, string(r)})
+			result = append(result, KeyAction{hid: hid, label: string(r)})
 		} else {
 			fmt.Printf("⚠ 跳过未知字符: %c (0x%04X)\n", r, r)
 		}
@@ -278,6 +288,7 @@ func main() {
 	fmt.Println("  - 导航键：<UP>, <DOWN>, <LEFT>, <RIGHT>, <HOME>, <END>")
 	fmt.Println("  - 功能键：<INSERT>, <DELETE>, <PAGEUP>, <PAGEDOWN>")
 	fmt.Println("  - 组合键：<CTRL_C>, <CTRL_V>, <CTRL_A>")
+	fmt.Println("  - 延时指令：<SLEEP N> (N为秒数)")
 	fmt.Println("示例：Hello<F1><ENTER><CTRL_A>")
 	fmt.Println("输入 <QUIT> 退出（或 Ctrl+C 终止）")
 
