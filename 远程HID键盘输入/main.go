@@ -147,9 +147,12 @@ func sendAllInOneSession(client *ssh.Client, keys []KeyAction, startSeq uint16) 
 		return seq
 	}
 
-	// 回显后续命令
-	if _, err := fmt.Fprintln(stdin, "set -x"); err != nil {
-		fmt.Printf("⚠ 发送 set -x 失败: %v\n", err)
+	// 把命令写入 SSH stdin，同时打印到本地终端用于调试
+	sendCmd := func(cmd string) {
+		fmt.Printf("%s", cmd)
+		if _, err := fmt.Fprint(stdin, cmd); err != nil {
+			fmt.Printf("⚠ 写入 SSH stdin 失败: %v\n", err)
+		}
 	}
 
 	fmt.Printf("批量发送 %d 个动作（单 Session 模式）...\n", len(keys))
@@ -172,9 +175,9 @@ func sendAllInOneSession(client *ssh.Client, keys []KeyAction, startSeq uint16) 
 		releaseStr := toOctalString(releaseData)
 
 		// 写入命令
-		fmt.Fprintf(stdin, "printf '%s' > /dev/ttyAMA1\n", pressStr)
+		sendCmd(fmt.Sprintf("printf '%s' > /dev/ttyAMA1\n", pressStr))
 		time.Sleep(20 * time.Millisecond)
-		fmt.Fprintf(stdin, "printf '%s' > /dev/ttyAMA1\n", releaseStr)
+		sendCmd(fmt.Sprintf("printf '%s' > /dev/ttyAMA1\n", releaseStr))
 		time.Sleep(20 * time.Millisecond)
 
 		if i > 0 && i%10 == 0 {
