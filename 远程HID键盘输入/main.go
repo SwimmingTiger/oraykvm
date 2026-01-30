@@ -137,10 +137,19 @@ func sendAllInOneSession(client *ssh.Client, keys []KeyAction, startSeq uint16) 
 	}
 	defer stdin.Close()
 
+	// 回显远端输出
+	session.Stdout = os.Stdout
+	session.Stderr = os.Stderr
+
 	// 启动 Shell
 	if err := session.Shell(); err != nil {
 		fmt.Printf("❌ 启动 Shell 失败: %v\n", err)
 		return seq
+	}
+
+	// 回显后续命令
+	if _, err := fmt.Fprintln(stdin, "set -x"); err != nil {
+		fmt.Printf("⚠ 发送 set -x 失败: %v\n", err)
 	}
 
 	fmt.Printf("批量发送 %d 个动作（单 Session 模式）...\n", len(keys))
