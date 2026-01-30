@@ -279,28 +279,37 @@ func main() {
 	fmt.Println("  - 功能键：<INSERT>, <DELETE>, <PAGEUP>, <PAGEDOWN>")
 	fmt.Println("  - 组合键：<CTRL_C>, <CTRL_V>, <CTRL_A>")
 	fmt.Println("示例：Hello<F1><ENTER><CTRL_A>")
-	fmt.Print("\n请输入要发送的字符串: ")
+	fmt.Println("输入 <QUIT> 退出（或 Ctrl+C 终止）")
 
-	text, _ := reader.ReadString('\n')
-	text = strings.TrimSpace(text)
+	for {
+		fmt.Print("\n请输入要发送的字符串: ")
+		text, err := reader.ReadString('\n')
+		if err != nil {
+			fmt.Printf("读取输入失败: %v\n", err)
+			return
+		}
+		text = strings.TrimSpace(text)
 
-	if text == "" {
-		fmt.Println("空输入，退出")
-		return
+		if strings.EqualFold(text, "<QUIT>") {
+			fmt.Println("收到 <QUIT>，退出")
+			return
+		}
+
+		if text == "" {
+			fmt.Println("空输入，跳过")
+			continue
+		}
+
+		keys := parseInput(text)
+		if len(keys) == 0 {
+			fmt.Println("无有效按键，跳过")
+			continue
+		}
+
+		start := time.Now()
+		seqNum = sendAllInOneSession(client, keys, seqNum)
+		//sendBatch(client, keys, seqNum)
+
+		fmt.Printf("\n✅ 发送完成! 本次耗时: %v\n", time.Since(start))
 	}
-
-	fmt.Println("\n5秒后执行...")
-	time.Sleep(5 * time.Second)
-
-	keys := parseInput(text)
-	if len(keys) == 0 {
-		fmt.Println("无有效按键")
-		return
-	}
-
-	start := time.Now()
-	sendAllInOneSession(client, keys, seqNum)
-	//sendBatch(client, keys, seqNum)
-
-	fmt.Printf("\n✅ 全部完成! 总耗时: %v\n", time.Since(start))
 }
