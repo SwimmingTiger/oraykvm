@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"flag"
 	"fmt"
 	"os"
 	"regexp"
@@ -208,14 +209,56 @@ func parseInput(input string) []struct {
 }
 
 func main() {
+	var (
+		host     string
+		username string
+		password string
+		showHelp bool
+	)
+
+	flag.StringVar(&host, "host", "", "控控IP:SSH端口")
+	flag.StringVar(&username, "user", "admin", "SSH登录用户名（可选，默认为admin）")
+	flag.StringVar(&password, "password", "", "SSH登录密码（可选，未提供则会要求单独输入）")
+	flag.BoolVar(&showHelp, "h", false, "显示帮助")
+	flag.BoolVar(&showHelp, "help", false, "显示帮助")
+	flag.Usage = func() {
+		fmt.Fprintf(flag.CommandLine.Output(), "\n用法: %s [options]\n\n", os.Args[0])
+		fmt.Fprintln(flag.CommandLine.Output(), "选项:")
+		flag.PrintDefaults()
+		fmt.Fprintln(flag.CommandLine.Output(), "\n示例:")
+		fmt.Fprintf(flag.CommandLine.Output(), "  %s -host 192.168.1.232:44022 -password '{D!oF=Xu+@!.'\n", os.Args[0])
+	}
+	flag.Parse()
+
+	if showHelp {
+		flag.Usage()
+		return
+	}
+
+	if strings.TrimSpace(host) == "" {
+		fmt.Println("❌ 缺少主机参数 -host ip:端口")
+		flag.Usage()
+		return
+	}
+
+	if strings.TrimSpace(password) == "" {
+		fmt.Print("请输入SSH登录密码: ")
+		pwdReader := bufio.NewReader(os.Stdin)
+		inputPwd, _ := pwdReader.ReadString('\n')
+		password = strings.TrimSpace(inputPwd)
+		if password == "" {
+			fmt.Println("❌ 密码不能为空")
+			return
+		}
+	}
+
 	sshConfig := &ssh.ClientConfig{
-		User:            "admin",
-		Auth:            []ssh.AuthMethod{ssh.Password("{D!oF=Xu+@!.")},
+		User:            username,
+		Auth:            []ssh.AuthMethod{ssh.Password(password)},
 		HostKeyCallback: ssh.InsecureIgnoreHostKey(),
 		Timeout:         5 * time.Second,
 	}
 
-	host := "192.168.1.232:44022"
 	fmt.Printf("连接 %s ...\n", host)
 
 	client, err := ssh.Dial("tcp", host, sshConfig)
