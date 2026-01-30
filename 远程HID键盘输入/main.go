@@ -176,7 +176,7 @@ func sendAllInOneSession(client *ssh.Client, keys []KeyAction, startSeq uint16) 
 	// 关闭输入，等待结束
 	stdin.Close()
 	session.Wait()
-	fmt.Println("✅ 全部发送完成")
+	//fmt.Println("✅ 全部发送完成")
 	return seq
 }
 
@@ -321,6 +321,6 @@ func main() {
 		seqNum = sendAllInOneSession(client, keys, seqNum)
 		//sendBatch(client, keys, seqNum)
 
-		fmt.Printf("\n✅ 发送完成! 本次耗时: %v\n", time.Since(start))
+		fmt.Printf("✅ 发送完成! 本次耗时: %v\n", time.Since(start))
 	}
 }
