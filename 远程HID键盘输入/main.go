@@ -71,10 +71,10 @@ func calculateChecksum(modifier, code byte) byte {
 	return 0xbe + modifier + code
 }
 
-func toOctalString(data []byte) string {
+func toHexString(data []byte) string {
 	var sb strings.Builder
 	for _, b := range data {
-		sb.WriteString(fmt.Sprintf("\\%03o", b))
+		sb.WriteString(fmt.Sprintf("\\x%02x", b))
 	}
 	return sb.String()
 }
@@ -167,12 +167,12 @@ func sendAllInOneSession(client *ssh.Client, keys []KeyAction, startSeq uint16) 
 		// 按下
 		pressData := buildHIDPacket(seq, key.hid.Modifier, key.hid.Code)
 		seq++
-		pressStr := toOctalString(pressData)
+		pressStr := toHexString(pressData)
 
 		// 弹起
 		releaseData := buildHIDPacket(seq, 0x00, 0x00)
 		seq++
-		releaseStr := toOctalString(releaseData)
+		releaseStr := toHexString(releaseData)
 
 		// 写入命令
 		sendCmd(fmt.Sprintf("printf '%s' > /dev/ttyAMA1\n", pressStr))
