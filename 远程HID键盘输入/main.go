@@ -81,6 +81,7 @@ func toHexString(data []byte) string {
 
 func buildHIDPacket(seqNum uint16, modifier, code byte) []byte {
 	checksum := calculateChecksum(modifier, code)
+	isExtended := code >= 0x46 && code <= 0x52
 
 	if checksum == 0xCC {
 		packet := make([]byte, 17)
@@ -106,7 +107,11 @@ func buildHIDPacket(seqNum uint16, modifier, code byte) []byte {
 	packet[3] = byte(seqNum & 0xFF)
 	packet[4] = byte((seqNum >> 8) & 0xFF)
 	packet[5] = checksum
-	packet[6] = 0x00
+	if isExtended {
+		packet[6] = 0x01
+	} else {
+		packet[6] = 0x00
+	}
 	packet[7] = 0x03
 	packet[8] = modifier
 	packet[9] = code
