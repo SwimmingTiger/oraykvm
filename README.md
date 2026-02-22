@@ -126,6 +126,54 @@ U盘刷机虽然安全可靠，但来回插拔U盘以及按reset键，还是挺�
 
 热心网友告诉我官方更改了1.4.2及以上版本固件的root密码：https://github.com/SwimmingTiger/oraykvm/issues/9
 
+---
+### 获取44033端口root密码（及修改密码）的方法
+
+对于1.4.2及以上版本固件，`44033`端口的root密码不再是`xxoo`。如果你忘记了密码或者想修改它，可以采用以下手动修改`shadow`文件的方式。
+
+1.  **备份mtd2分区**
+    通过ssh连接到控控A2（44022端口），执行以下命令将`mtdblock2`分区备份为`/dev/mtd2.img`。
+    ```bash
+    dd if=/dev/mtdblock2 of=/dev/mtd2.img
+    ```
+
+2.  **下载镜像文件**
+    将`/dev/mtd2.img`文件从控控A2下载到本地（例如使用`scp`或`WinSCP`）。
+
+3.  **解包镜像**
+    在Linux环境（如Ubuntu）下，使用`unsquashfs`命令解包镜像。
+    ```bash
+    unsquashfs mtd2.img
+    ```
+
+4.  **修改密码文件**
+    解包后会生成`squashfs-root`目录。修改其中的`etc/shadow`文件。
+    你可以直接替换`shadow`文件为本项目`A2_1.4.3`目录下提供的预置文件。
+    或者，你也可以使用`openssl`命令生成自己的密码哈希值并替换`shadow`文件中的root密码字段。
+    例如，生成密码为`admin@shaoxia.xyz`，盐为`BhyWc/wu`的哈希：
+    ```bash
+    openssl passwd -1 -salt BhyWc/wu 'admin@shaoxia.xyz'
+    ```
+
+5.  **重新打包镜像**
+    使用`mksquashfs`命令将修改后的文件重新打包。
+    ```bash
+    mksquashfs squashfs-root new_mtd2.img -comp xz -b 131072
+    ```
+    *注意：本项目`A2_1.4.3`目录下也提供了一个已经修改好的`new_mtd2.img`可供直接使用。*
+
+6.  **上传新镜像**
+    将打包好的`new_mtd2.img`上传到控控A2的`/dev`目录下。
+
+7.  **刷入新镜像**
+    执行以下命令将新镜像刷入`mtd2`分区。此处的路径是为了绕过chroot环境。
+    ```bash
+    /proc/1/root/usr/sbin/flashcp -v /dev/new_mtd2.img /proc/1/root/dev/mtd2
+    ```
+
+8.  **重启设备**
+    刷入完成后，重启控控A2。现在你可以使用新密码登录`44033`端口了。
+
 ## 备份原厂固件的方法
 
 建议刷入前先对原厂固件进行备份，主要是备份串号等信息，防止刷机不当信息意外丢失。
